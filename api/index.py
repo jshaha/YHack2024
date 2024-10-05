@@ -32,6 +32,3 @@ def get_data():
         "city": "New York"
     }
     return data
-
-if __name__ == "__main__":
-    app.run()

@@ -1,4 +1,4 @@
-import "server-only";
+// import "server-only";
 
 const URL = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api`

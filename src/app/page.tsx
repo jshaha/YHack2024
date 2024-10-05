@@ -1,5 +1,4 @@
 "use client"
-
 import UploadSection from "./_components/upload_section";
 import { getMyAIResponce } from "~/server/ai_api_calls";
 export const dynamic = 'force-dynamic'

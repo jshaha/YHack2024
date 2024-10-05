@@ -11,7 +11,9 @@ const config = {
           {
             source: '/api/ai/:path*',
             destination:
-              '/api/ai/',
+              process.env.NODE_ENV === 'development'
+                ? 'http://127.0.0.1:5328/api/ai/:path*'
+                : '/api/ai/',
           },
         ]
       },

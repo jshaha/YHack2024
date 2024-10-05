@@ -5,8 +5,12 @@ from uagents import Agent, Context, Model
 from typing import List
 import base64
 from openai import OpenAI
+from dotenv import load_dotenv
 
-client = OpenAI()
+
+load_dotenv(dotenv_path='../../../.env')
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 class UploadPDF(Model):
     filename: str
@@ -127,8 +131,6 @@ if __name__ == "__main__":
     # Print the extracted text from each slide
     for slide in response.slides[0:4]:
         print(f"Slide {slide.slide_number}: {slide.text} \n====\n{slides_content[slide.slide_number - 1]}")
-
-    # Generate image of each slide
 
 
     # Now run the agent (will block further execution)

@@ -9,8 +9,8 @@ export async function getMyAIResponce(){
         const response = await fetch(`${URL}/python`, {
           method: "GET",
         });
-        const data = await response.json();
-        return data
+        
+        return response
       } catch (error) {
         console.error("Error creating todo:", error);
       }

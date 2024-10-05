@@ -57,9 +57,11 @@ def convert_pdf_to_images(pdf_path: str) -> None:
         image.save(f'images/page_{i+1}.png', 'PNG')
 
 
-def generate_lecture_from_slides(slides: List[SlideText]) -> str:
+def generate_lecture_from_slides(slides: List[SlideText], previous_lectures: str = "") -> str:
     messages = []
-    
+    content = []
+    lecture_history = previous_lectures  # Start with any existing lecture history
+
     # Loop through each slide to prepare the prompt for each slide
     for slide in slides:
         image_path = f"images/page_{slide.slide_number}.png"
@@ -74,7 +76,8 @@ def generate_lecture_from_slides(slides: List[SlideText]) -> str:
             "content": [
                 {
                     "type": "text",
-                    "text": f"Generate a lecture speech for slide {slide.slide_number}: {slide.text}"
+                    "text": f"Here is the lecture so far: {lecture_history}.\n"
+                            f"Now, generate a lecture speech for slide {slide.slide_number}: {slide.text}"
                 },
                 {
                     "type": "image_url",
@@ -85,18 +88,22 @@ def generate_lecture_from_slides(slides: List[SlideText]) -> str:
             ]
         })
 
-    
-    # Send a single request to OpenAI GPT-4 Vision API with all the slides
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",  # Using the Vision model
-        messages=messages
-    )
+        # Send request to OpenAI GPT-4 Vision API for the current slide
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # Using the Vision model
+            messages=messages
+        )
 
-    # Extract the response from GPT
-    lecture_script = response.choices[0].message.content
-    return lecture_script
+        # Extract the response for the current slide
+        current_lecture = response.choices[0].message.content
+        content.append(current_lecture)
 
+        # Append the generated lecture to the history
+        lecture_history += f"\n\nLecture for slide {slide.slide_number}:\n{current_lecture}"
     
+    return content
+
+
 if __name__ == "__main__":
     pdf_path = "CSS.pdf"  # Path to your PDF file
 
@@ -113,14 +120,16 @@ if __name__ == "__main__":
     # Run the function to handle the PDF upload
     response = handle_upload_pdf(req)
     
-    # Print the extracted text from each slide
-    for slide in response.slides:
-        print(f"Slide {slide.slide_number}: {slide.text}")
-
-    # Generate image of each slide
     convert_pdf_to_images(pdf_path)
 
-    print(generate_lecture_from_slides(response.slides))
+    slides_content = generate_lecture_from_slides(response.slides[0:4])
+
+    # Print the extracted text from each slide
+    for slide in response.slides[0:4]:
+        print(f"Slide {slide.slide_number}: {slide.text} \n====\n{slides_content[slide.slide_number - 1]}")
+
+    # Generate image of each slide
+
 
     # Now run the agent (will block further execution)
     agent.run()

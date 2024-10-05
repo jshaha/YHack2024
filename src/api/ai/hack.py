@@ -5,34 +5,39 @@ from typing import List
 import asyncio
 
 class UploadPDF(Model):
-    filename = str
-    filedata = bytes
+    filename: str
+    filedata: bytes
 
 class SlideText(Model):
-    slide_number = int
-    text = str
+    slide_number: int
+    text: str
     
 class ResponseSlides(Model):
     slides: List[SlideText]
 
-agent = Agent(name = "PDF_processor")
+agent = Agent(name="PDF_processor")
 
 def extract_text_per_slide(pdf_data: bytes) -> List[SlideText]:
     slides = []
-    temp_pdf_path = "slides.pdf"
-    with open(temp_pdf_path, "wb") as f:
-        f.write(pdf_data)
+    try:
+        # Open the PDF directly from bytes using PyMuPDF (fitz)
+        pdf_document = fitz.open(stream=pdf_data, filetype="pdf")
 
-    pdf_document = fitz.open(temp_pdf_path)
-    
-    for page_num in range(pdf_document.page_count):
-        page = pdf_document.load_page(page_num)
-        text = page.get.text()
-        slides.append(SlideText(slide_number=page_num + 1, text=text))
-    
-    return slides
+        # Extract text from each slide
+        for page_num in range(pdf_document.page_count):
+            page = pdf_document.load_page(page_num)
+            text = page.get_text("text")
+            slides.append(SlideText(slide_number=page_num + 1, text=text))
 
-async def handle_upload_pdf(ctx: Context, req: UploadPDF) -> ResponseSlides:
+        return slides
+
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        raise
+
+
+
+def handle_upload_pdf(req: UploadPDF) -> ResponseSlides:
     # Extract text directly from the PDF data
     slides = extract_text_per_slide(req.filedata)
     
@@ -72,26 +77,27 @@ async def handle_upload_pdf(ctx: Context, req: UploadPDF) -> ResponseSlides:
 
     
 if __name__ == "__main__":
-    # agent.run()
-
-
     pdf_path = "CSS.pdf"  # Path to your PDF file
 
     # Read the file as bytes
     with open(pdf_path, "rb") as f:
         pdf_bytes = f.read()
 
+    if not pdf_bytes:
+        raise FileNotFoundError("Failed to load PDF or file is empty.")
+
     # Simulate the request object
-    req = UploadPDF(filename="test_slides.pdf", filedata=pdf_bytes)
+    req = UploadPDF(filename=pdf_path, filedata=pdf_bytes)
 
-    # Simulate the context (can be a simple placeholder)
-    # ctx = Context()
-
-    # Run the async function to handle the PDF upload
-    response = asyncio.run(handle_upload_pdf(ctx, req))
-
+    # Run the function to handle the PDF upload
+    response = handle_upload_pdf(req)
+    
     # Print the extracted text from each slide
     for slide in response.slides:
         print(f"Slide {slide.slide_number}: {slide.text}")
+
+    # Now run the agent (will block further execution)
+    agent.run()
+
 
 

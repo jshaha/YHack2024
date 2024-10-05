@@ -6,11 +6,17 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-        source: '/api/ai/:path*',
-        destination:
-          process.env.NODE_ENV === 'development'
-            ? 'http://127.0.0.1:5328/api/ai/:path*'
-            : '/api/ai/',
+    rewrites: async () => {
+        return [
+          {
+            source: '/api/:path*',
+            destination:
+              process.env.NODE_ENV === 'development'
+                ? 'http://127.0.0.1:5328/api/:path*'
+                : '/api/',
+          },
+        ]
+      },
             typescript: {
                 ignoreBuildErrors: true,
             }, eslint: {

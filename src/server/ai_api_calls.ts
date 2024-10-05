@@ -1,8 +1,8 @@
 import "server-only";
 
 const URL = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/ai/api`
-  : "http://localhost:5328/ai/api";
+  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/ai`
+  : "http://localhost:5328/api/ai";
 
 export async function getMyAIResponce(){
     try {

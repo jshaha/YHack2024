@@ -30,7 +30,7 @@ export async function getMyAIResponce() {
     return data;
   } catch (error) {
     console.error("Error fetching AI response:", error);
-    throw error; // Re-throw the error for the caller to handle
+    return 1; // Re-throw the error for the caller to handle
   }
 }
 

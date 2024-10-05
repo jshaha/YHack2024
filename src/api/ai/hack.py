@@ -61,7 +61,7 @@ def convert_pdf_to_images(pdf_path: str) -> None:
         image.save(f'images/page_{i+1}.png', 'PNG')
 
 
-def generate_lecture_from_slides(slides: List[SlideText], previous_lectures: str = "") -> str:
+def generate_lecture_and_audio_from_slides(slides: List[SlideText], previous_lectures: str = "") -> str:
     messages = []
     content = []
     lecture_history = previous_lectures  # Start with any existing lecture history
@@ -69,7 +69,6 @@ def generate_lecture_from_slides(slides: List[SlideText], previous_lectures: str
     # Loop through each slide to prepare the prompt for each slide
     for slide in slides:
         image_path = f"images/page_{slide.slide_number}.png"
-        
         # Encode the image to base64
         with open(image_path, "rb") as image_file:
             encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
@@ -102,10 +101,26 @@ def generate_lecture_from_slides(slides: List[SlideText], previous_lectures: str
         current_lecture = response.choices[0].message.content
         content.append(current_lecture)
 
+        output_filename = f"audio/lecture_slide_{slide.slide_number}.mp3"
+        text_to_speech(current_lecture, output_filename)
+
         # Append the generated lecture to the history
         lecture_history += f"\n\nLecture for slide {slide.slide_number}:\n{current_lecture}"
     
     return content
+
+
+def text_to_speech(text: str, output_filename: str ):
+    response = client.audio.speech.create(
+        model = "tts-1",
+        input=text,
+        voice="nova"
+    )
+    
+    response.stream_to_file(output_filename)
+    print(f"Audio content written to {output_filename}")
+
+    
 
 
 if __name__ == "__main__":
@@ -126,7 +141,7 @@ if __name__ == "__main__":
     
     convert_pdf_to_images(pdf_path)
 
-    slides_content = generate_lecture_from_slides(response.slides[0:4])
+    slides_content = generate_lecture_and_audio_from_slides(response.slides[0:4])
 
     # Print the extracted text from each slide
     for slide in response.slides[0:4]:

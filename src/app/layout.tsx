@@ -24,12 +24,8 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-      <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>{children}</body>
+      
+      {children}</body>
     </html>
     </ClerkProvider>
     

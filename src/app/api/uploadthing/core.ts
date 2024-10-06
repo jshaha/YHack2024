@@ -28,6 +28,7 @@ export const ourFileRouter = {
 
       await db.insert(slides).values({
         userId: metadata.userId,
+        status: "processing",
         name: file.name,
         url: file.url,
       });

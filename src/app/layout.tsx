@@ -32,5 +32,6 @@ export default function RootLayout({
           </SignedIn>{children}</body>
     </html>
     </ClerkProvider>
+    
   );
 }

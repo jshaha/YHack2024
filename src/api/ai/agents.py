@@ -8,6 +8,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import asyncio
 from flask import Flask, request, jsonify
+from threading import Thread
 
 app = Flask(__name__)
 load_dotenv(dotenv_path='../../../.env')
@@ -190,45 +191,38 @@ response_tracker = {
     'transcription': None
 }
 
-@user_agent.on_event("startup")
-async def send_message(ctx: Context):
-    ctx.logger.info("Sending a message to the pdf parser.")
+async def trigger_send_message(bureau: Bureau):
+    user_ctx = user_agent.create_context()  # Create a new context for the user agent
+    user_ctx.logger.info("Sending a message to the PDF parser.")
 
     pdf_path = "CSS.pdf"  # Path to your PDF file
 
     # Read the file as bytes
-    with open(pdf_path, "rb") as f:
-        pdf_bytes = f.read()
+    try:
+        with open(pdf_path, "rb") as f:
+            pdf_bytes = f.read()
+    except FileNotFoundError:
+        user_ctx.logger.error(f"PDF file not found at path: {pdf_path}")
+        return
 
     if not pdf_bytes:
-        raise FileNotFoundError("Failed to load PDF or file is empty.")
+        user_ctx.logger.error("Failed to load PDF or file is empty.")
+        return
 
     # Encode the PDF bytes to base64 string
     encoded_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
 
-    # Simulate the request object
-    req = UploadPDF(filename=pdf_path, filedata=encoded_pdf)
+    # Create the UploadPDF request object
+    req = UploadPDF(filename=os.path.basename(pdf_path), filedata=encoded_pdf)
+
+    # Send messages to the agents
+    await user_ctx.send(pdf_to_image_agent.address, req)
+    await user_ctx.send(pdf_to_text_agent.address, req)
 
 
-    await ctx.send(pdf_to_image_agent.address, req)
-
-    # 1. Extract text from pdf
-    await ctx.send(pdf_to_text_agent.address, req)
-
-    # 2. Extract images from pdf
-    # await ctx.send(pdf_to_image_agent.address, req)
-
-    # 3. Generate lecture speech from text and images of the slides
-    # await ctx.send(lecture_agent.address, ResponseSlides(slides=response_tracker['pdf_text']))
-
-    # 4. Synthesize voice for the lecture
-    # await ctx.send(voice_agent.address, StringArrayModel(messages=response_tracker['lecture']))
-
-    # 5. Transcribe the lecture audio
-    # await ctx.send(
-    #     transcription_agent.address,
-    #     StringArrayModel(messages=response_tracker['voice'])
-    # )
+@user_agent.on_event("startup")
+async def send_message(ctx: Context):
+    await trigger_send_message(bureau)
 
 
 ### Bureau to Manage Agents
@@ -240,5 +234,30 @@ bureau.add(voice_agent)
 bureau.add(transcription_agent)
 bureau.add(user_agent)
 
+@app.route('/api', methods=['POST'])
+def trigger_send_message_endpoint():
+    def run_async_task():
+        asyncio.run(trigger_send_message(bureau))
+
+    # Run the async function in a separate thread to avoid blocking Flask
+    thread = Thread(target=run_async_task)
+    thread.start()
+
+    return jsonify({"status": "send_message triggered"}), 200
+
+
 if __name__ == "__main__":
-    bureau.run()
+    from threading import Thread
+
+    def run_bureau():
+        bureau.run()
+
+    def run_flask():
+        app.run(host='0.0.0.0', port=5000)  # Adjust host and port as needed
+
+    # Start the bureau in a separate thread
+    bureau_thread = Thread(target=run_bureau)
+    bureau_thread.start()
+
+    # Start the Flask app
+    run_flask()

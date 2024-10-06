@@ -9,7 +9,7 @@ export default function LecturePageWrap({docs }: { docs: any }) {
   
   const dummyImages = docs.map((doc: { image_url: any; }) => doc.image_url);
 
-  const tracks = docs.map((doc: { audio_url: any; page: any; }) => ({ url: doc.audio_url, title:  `Slide #${doc.page}` }));
+  const tracks = docs.map((doc: { audio_url: any; page: any; }) => ({ url: "http://localhost:9000/audio/https___utfs.io_f_8awTsHrQMa5zm0UH2Bp7LDyIBUuiM7n0NGAeWfOdwHCaR8jP/lecture_3.mp3", title:  `Slide #${doc.page}` }));
 
   // const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -119,7 +119,7 @@ export default function LecturePageWrap({docs }: { docs: any }) {
       </div>
 
       <div className="flex flex-row items-center justify-center gap-12">
-        <div onClick={handlePrev} style={{ cursor: "pointer" }}>
+        <div onClick={handlePrev} style={{ cursor: "pointer", position: "fixed", left: "20px" }}>
           <button className="flex items-center justify-center w-12 h-12 text-indigo-600 transition-colors bg-white rounded-full focus:shadow-outline hover:bg-indigo-100">
             <svg
               className="w-6 h-6 fill-current"
@@ -190,7 +190,7 @@ export default function LecturePageWrap({docs }: { docs: any }) {
               )}
             </div>
           </div>
-          <nav aria-label="Page navigation">
+          <nav aria-label="Page navigation" style={{ maxWidth: "40%", overflowX: "hidden", }}>
             <ul className="inline-flex space-x-2">
               {dummyImages.map((_, index) => (
                 <li key={index}>
@@ -210,7 +210,7 @@ export default function LecturePageWrap({docs }: { docs: any }) {
           </nav>
         </div>
 
-        <div onClick={handleNext} style={{ cursor: "pointer" }}>
+        <div onClick={handleNext} style={{ cursor: "pointer",  position: "fixed", right: "20px" }}>
           <button className="flex items-center justify-center w-12 h-12 text-indigo-600 transition-colors bg-white rounded-full focus:shadow-outline hover:bg-indigo-100">
             <svg
               className="w-6 h-6 fill-current"

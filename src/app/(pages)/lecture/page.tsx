@@ -14,15 +14,17 @@ const page = () => {
 
   return (
     <div>
-      <div className="flex flex-col items-center justify-center">
-        <div>You lecture is ongoing, stay focus! </div>
-        <Image src={ex_1} style={{ width: "800px", height: "600px" }} />
-        <StyledButtonWhite onClick={() => router.push("/ending")}>
-          Lecturing
-        </StyledButtonWhite>
+      <div>You lecture is ongoing, stay focus! </div>
+      <div className="flex flex-row justify-center gap-12">
         <Image src={LeftArrowSVG} />
+        <div className="flex flex-col items-center justify-center">
+          <Image src={ex_1} style={{ width: "800px", height: "600px" }} />
+          <Image src={PlayButtonSVG} />
+          <StyledButtonWhite onClick={() => router.push("/ending")}>
+            Lecturing
+          </StyledButtonWhite>
+        </div>
         <Image src={RightArrowSVG} />
-        <Image src={PlayButtonSVG} />
       </div>
     </div>
   );

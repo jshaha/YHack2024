@@ -1,33 +1,25 @@
 export default function HowItWorks() {
-    return (
-        <section className="py-12">
+  return (
+    <section className="py-12">
       {/* Container */}
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-5 py-16 md:px-10 md:py-20">
         {/* HEADING TEXT */}
-        <p className="font-inter mb-2 text-center text-sm font-medium">
-          3 EASY STEPS
-        </p>
-        <h1 className="text-center text-3xl font-bold lg:text-4xl">
-          How it works
-        </h1>
+        <p className="font-inter mb-2 text-center text-sm font-medium">3 EASY STEPS</p>
+        <h1 className="text-center text-3xl font-bold lg:text-4xl">How it works</h1>
         <p className="font-inter mx-auto mb-12 mt-4 max-w-lg px-5 text-center text-base font-light text-gray-500">
-          Use premium tailwindcss components to ship your product faster to your
-          customers. Build better and faster with Devjoy
+          Turn your class slides into an engaging AI-driven lecture experience in just three simple steps.
         </p>
         {/* HOW IT WORKS STEPS */}
         <div className="flex flex-col items-start justify-center lg:flex-row">
-          {/* BLOCK */}
+          {/* BLOCK 1 */}
           <div className="relative my-8 flex w-full rounded-md lg:mx-8 lg:flex-col">
             <div className="flex h-16 w-16 items-center justify-center rounded-md bg-gray-200">
               <h2 className="text-3xl font-medium">1</h2>
             </div>
             <div className="ml-6 lg:ml-0">
-              <h2 className="mb-5 text-xl font-medium lg:mt-8">
-                Find Component
-              </h2>
+              <h2 className="mb-5 text-xl font-medium lg:mt-8">Upload Your Slides</h2>
               <p className="font-inter max-w-md pr-5 text-base text-gray-500">
-                Lorem ipsum dolor sit amet, elit ut aliquam, purus sit lorem
-                ipsum dolor sit amet
+                Simply upload your class slides in PDF format. Our AI agents will process them instantly.
               </p>
             </div>
             {/* MOBILE - HOW IT WORKS LINE */}
@@ -59,18 +51,15 @@ export default function HowItWorks() {
               />
             </svg>
           </div>
-          {/* BLOCK */}
+          {/* BLOCK 2 */}
           <div className="relative my-8 flex w-full rounded-md lg:mx-8 lg:flex-col">
             <div className="flex h-16 w-16 items-center justify-center rounded-md bg-gray-200">
               <h2 className="text-3xl font-medium">2</h2>
             </div>
             <div className="ml-6 lg:ml-0">
-              <h2 className="mb-5 text-xl font-medium lg:mt-8">
-                Copy and paste
-              </h2>
+              <h2 className="mb-5 text-xl font-medium lg:mt-8">Generate the Lecture</h2>
               <p className="font-inter max-w-md pr-5 text-base text-gray-500">
-                Lorem ipsum dolor sit amet, elit ut aliquam, purus sit lorem
-                ipsum dolor sit amet
+                Lecture Agent converts your slides into an interactive, professor-like lectures to explain those tough to understand concepts.
               </p>
             </div>
             {/* MOBILE - HOW IT WORKS LINE */}
@@ -102,21 +91,20 @@ export default function HowItWorks() {
               />
             </svg>
           </div>
-          {/* BLOCK */}
+          {/* BLOCK 3 */}
           <div className="relative my-8 flex w-full rounded-md lg:mx-8 lg:flex-col">
             <div className="flex h-16 w-16 items-center justify-center rounded-md bg-gray-200">
               <h2 className="text-3xl font-medium">3</h2>
             </div>
             <div className="ml-6 lg:ml-0">
-              <h2 className="mb-5 text-xl font-medium lg:mt-8">Done!</h2>
+              <h2 className="mb-5 text-xl font-medium lg:mt-8">Access Anytime, Anywhere</h2>
               <p className="font-inter max-w-md pr-5 text-base text-gray-500">
-                Lorem ipsum dolor sit amet, elit ut aliquam, purus sit lorem
-                ipsum dolor sit amet
+                Meet your new AI professor and access lectures anytime.
               </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-    )
+  );
 }

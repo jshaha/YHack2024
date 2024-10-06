@@ -6,3 +6,7 @@
       @apply bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white min-h-screen;
     }
   }
+
+body {
+  overflow-x: hidden;
+}

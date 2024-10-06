@@ -14,7 +14,7 @@ export async function getMyLectures() {
 export async function getMyItems(url:string) {
 
   const docs = await db.query.items.findMany({
-    // where: (model, { eq }) => eq(model.pdf_url, url),
+    where: (model, { eq }) => eq(model.pdf_url, url ?? ''),
     orderBy: (model, { desc }) => [desc(model.page)],
   });
   return docs;

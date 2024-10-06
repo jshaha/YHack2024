@@ -9,7 +9,7 @@ export default function LecturePageWrap({docs }: { docs: any }) {
   
   const dummyImages = docs.map((doc: { image_url: any; }) => doc.image_url);
 
-  const tracks = docs.map((doc: { audio_url: any; page: any; }) => ({ url: "http://localhost:9000/audio/https___utfs.io_f_8awTsHrQMa5zm0UH2Bp7LDyIBUuiM7n0NGAeWfOdwHCaR8jP/lecture_3.mp3", title:  `Slide #${doc.page}` }));
+  const tracks = docs.map((doc: { audio_url: any; page: any; }) => ({ url: doc.audio_url, title:  `Slide #${doc.page}` }));
 
   // const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);

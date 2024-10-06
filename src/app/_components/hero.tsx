@@ -27,28 +27,28 @@ export default function Hero() {
             <img
               src="https://logos-world.net/wp-content/uploads/2022/02/UC-Berkeley-Symbol.png"
               alt="UC Berkeley"
-              className="inline-block h-16 md:h-24 lg:h-32"
+              className="inline-block h-12 md:h-16 lg:h-20"
             />
           </li>
           <li className="flex items-center justify-center">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Yale_University_logo.svg/800px-Yale_University_logo.svg.png"
               alt="Yale"
-              className="inline-block h-16 md:h-24 lg:h-32"
+              className="inline-block h-12 md:h-16 lg:h-20"
             />
           </li>
           <li className="flex items-center justify-center">
             <img
               src="https://1000logos.net/wp-content/uploads/2022/08/NYU-Logo.png"
               alt="NYU"
-              className="inline-block h-16 md:h-24 lg:h-32"
+              className="inline-block h-12 md:h-16 lg:h-20"
             />
           </li>
           <li className="flex items-center justify-center">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/2560px-Harvard_University_logo.svg.png"
               alt="Harvard"
-              className="inline-block h-16 md:h-24 lg:h-32"
+              className="inline-block h-12 md:h-16 lg:h-20"
             />
           </li>
         </ul>

@@ -25,28 +25,28 @@ export default function Hero() {
         <ul className="mt-16 grid gap-8 sm:mt-24 sm:grid-cols-3 sm:gap-12 md:grid-cols-5 md:gap-4">
           <li className="flex items-center justify-center">
             <img
-              src="./UC-Berkeley-Symbol.png"
+              src="https://logos-world.net/wp-content/uploads/2022/02/UC-Berkeley-Symbol.png"
               alt="UC Berkeley"
               className="inline-block h-9"
             />
           </li>
           <li className="flex justify-center">
             <img
-              src="./Yale_University_Logo.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Yale_University_logo.svg/800px-Yale_University_logo.svg.png"
               alt="Yale"
               className="inline-block h-9"
             />
           </li>
           <li className="flex justify-center">
             <img
-              src="./NYU-Logo.png"
+              src="https://1000logos.net/wp-content/uploads/2022/08/NYU-Logo.png"
               alt="NYU"
               className="inline-block h-9"
             />
           </li>
           <li className="flex justify-center">
             <img
-              src="./Harvard_University_logo.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Harvard_University_logo.svg/2560px-Harvard_University_logo.svg.png"
               alt="Harvard"
               className="inline-block h-9"
             />

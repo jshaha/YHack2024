@@ -10,6 +10,7 @@ export default function Hero() {
           <h1 className="mb-4 text-4xl font-bold md:text-6xl">
             The Efficient, Adaptive, and Interactive Lecture Platform
           </h1>
+
           <p className="mb-6 text-sm text-gray-500 sm:text-xl lg:mb-8">
             Transform your class slides into engaging, professor-like lectures accessible from anywhere, anytime. Whether you're a student, professional, or lifelong learner, our AI-driven platform brings your learning materials to life. Experience personalized, interactive lessons tailored to you.
           </p>

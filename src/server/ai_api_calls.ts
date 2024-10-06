@@ -1,12 +1,7 @@
-const getBaseUrl = () => {
-  if (process.env.NEXT_PUBLIC_VERCEL_URL)
-    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5328";
-};
+
 
 export async function getMyAIResponce() {
-  const baseUrl = getBaseUrl();
-  const apiUrl = `${baseUrl}/api/python`;
+  const apiUrl = `https://dog.ceo/api/breeds/image/random`;
 
   try {
     const response = await fetch(apiUrl, {

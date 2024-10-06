@@ -5,10 +5,11 @@ import styled from "styled-components";
 import LogoSVG from "./asset/logo.svg";
 import landingImage from "./asset/landing.png";
 import Colors from "./colors";
-import Footer from "./components/footer";
+import { Footer } from "./components/footer";
 import TopNav from "./components/topNav";
 import { StyledButtonWhite } from "./components/styled/StyledButtonWhite";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+
 const Header = styled.div`
   color: ${Colors.brand500};
   maxwidth: 600px;
@@ -21,11 +22,10 @@ const Header = styled.div`
 
 export default function Home() {
   const router = useRouter();
-  const pathname = usePathname();
   return (
     <div className="w-100 flex h-screen flex-col items-center justify-start text-center">
       <div style={{ maxHeight: "350px", maxWidth: "600px" }}>
-        <div className="mb-5 mt-5 font-semibold">Introducing Numaira</div>
+        <div className="mb-5 mt-5 font-semibold">Introducing Lecture-Agent</div>
 
         <Header>Reviewing your slides by listening to lecture again!</Header>
         <div
@@ -36,13 +36,11 @@ export default function Home() {
             justifyContent: "center",
           }}
         ></div>
-        <StyledButtonWhite
-          onClick={() => router.push("/upload")}
-          className={pathname === "/contact" ? "active" : ""}
-        >
+        <StyledButtonWhite onClick={() => router.push("/upload")}>
           Get started
         </StyledButtonWhite>
       </div>
+      {/* <Footer /> */}
     </div>
   );
 }

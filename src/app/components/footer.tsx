@@ -142,7 +142,6 @@ const Footer = () => {
                   fill={Colors.neutral700}
                 />
               </a>
-              {/* <div className="px-2">·</div> */}
               <a href="mailto:numairaai@proton.me" className="px-1 underline">
                 <EmailSVG
                   length={20}

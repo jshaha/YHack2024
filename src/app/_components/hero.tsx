@@ -8,7 +8,7 @@ export default function Hero() {
         <div className="mx-auto max-w-3xl text-center">
           {/* Title */}
           <h1 className="mb-4 text-4xl font-bold md:text-6xl">
-            The Fast, Reliable and Secure Payment Platform
+            The Efficient, Adaptive, and Interactive Lecture Platform
           </h1>
           <p className="mb-6 text-sm text-gray-500 sm:text-xl lg:mb-8">
             Say goodbye to payment headaches with SecurePay! Our easy-to-use

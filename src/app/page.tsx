@@ -10,7 +10,6 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 async function UploadFlow() {
-
   const myLectures = await getMyLectures()
 
   return (
@@ -22,7 +21,7 @@ async function UploadFlow() {
           <h2 className="text-2xl font-bold mb-4">Previously Uploaded PDFs</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-9">
         {myLectures.map((pdf) => (
-        <Link href={`/lecture/`} key={pdf.id}>
+        <Link href={{ pathname: `/lecture/` + encodeURIComponent(pdf.url) }} key={pdf.id}>
           {/* <Link href={`/lecture/${pdf.id}`} key={pdf.id}></Link> */}
         <div className="bg-white rounded-lg shadow-md p-4 text-gray-800 flex flex-col ">
           <div className="mb-2">

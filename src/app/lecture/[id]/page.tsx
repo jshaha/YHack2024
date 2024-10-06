@@ -1,33 +1,22 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { getMyItems } from "~/server/queries";
 
-const dummyImages = [
-  "https://via.placeholder.com/800x600?text=Slide+1",
-  "https://via.placeholder.com/800x600?text=Slide+2",
-  "https://via.placeholder.com/800x600?text=Slide+3",
-];
+interface Props {
+  params: { url: string }; // Define the params prop
+}
 
-export default function LecturePage() {
-  const tracks = [
-    {
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-      title: 'Lecture 0',
-      tags: ['lecture']
-    },
-    {
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-      title: 'Lecture 1',
-      tags: ['lecture']
-    },
-    {
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-      title: 'Madza - Persistence',
-      tags: ['dubstep']
-    }
-  ];
+export default async function LecturePage({ params }: Props) {
+  const { url } = params;
+  console.log(decodeURIComponent(url));
 
-  const router = useRouter();
+  const docs = await getMyItems(decodeURIComponent(url));
+
+  const dummyImages = docs.map((doc) => doc.image_url);
+
+  const tracks = docs.map((doc) => ({ url: doc.audio_url, title:  `Slide #${doc.page}` }));
+
+  // const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);

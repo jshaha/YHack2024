@@ -35,18 +35,15 @@ const Footer = () => {
   const pathname = usePathname();
   return (
     <div>
-      <div className="flex flex-col gap-16">
-        <div className="flex h-[320px] items-center justify-center gap-20">
+      <div className="flex flex-col gap-10">
+        <div className="flex h-[280px] items-center justify-center gap-20">
           <div className="flex flex-col items-start" style={{ width: "800px" }}>
             <div
               className="flex flex-col items-start justify-start"
               style={{ gap: "20px" }}
             >
               <div className="items-start">
-                <StyledButtonWhite
-                  onClick={() => router.push("/dashboard")}
-                  className={pathname === "/contact" ? "active" : ""}
-                >
+                <StyledButtonWhite onClick={() => router.push("/")}>
                   Request A Demo
                 </StyledButtonWhite>
               </div>

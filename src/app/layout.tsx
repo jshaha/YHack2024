@@ -13,11 +13,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <Head> */}
-      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <Head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <title>{"Lecture-Agent"}</title>
+        <meta name="description" content={"Lecture-Agent"} />
+      </Head>
       <title>{"Lecture-Agent"}</title>
-      <meta name="description" content={"Lecture-Agent"} />
-      {/* </Head> */}
       <body className={inter.className}>
         <CustomLayout>{children}</CustomLayout>
       </body>

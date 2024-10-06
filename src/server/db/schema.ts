@@ -39,7 +39,10 @@ export const items = createTable(
   "item",
   {
     page: serial("page").primaryKey(),
-    url: varchar("url", { length: 1024 }).notNull(),
+    audio_url: varchar("audio_url", { length: 1024 }).notNull(),
+    pdf_url: varchar("pdf_url", { length: 1024 }).notNull(),
+    image_url: varchar("image_url", { length: 1024 }).notNull(),
+    trasncription: varchar("transcription", { length: 10256 }).notNull(),
     userId: varchar("user_id", { length: 256 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)

@@ -1,17 +1,21 @@
 import os
 import fitz  # PyMuPDF for extracting text from PDF
-from pdf2image import convert_from_path  # For converting PDF to images
+from pdf2image import convert_from_bytes  # For converting PDF to images
 from uagents import Agent, Context, Model, Bureau
 from typing import List
 import base64
 from openai import OpenAI
 from dotenv import load_dotenv
 import asyncio
+from flask import Flask, request, jsonify
 
-
+app = Flask(__name__)
 load_dotenv(dotenv_path='../../../.env')
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
+# Ensure necessary directories exist
+for directory in ['images', 'audio', 'subtitles']:
+    os.makedirs(directory, exist_ok=True)
 
 class UploadPDF(Model):
     filename: str
@@ -27,26 +31,18 @@ class ResponseSlides(Model):
 class StringArrayModel(Model):
     messages: List[str]
 
+### PDF to Text Agent: Handles PDF Upload and Text Extraction
+pdf_to_text_agent = Agent(name="PDF_to_Text_agent", seed="pdf text recovery phrase")
 
-### PDF Agent: Handles PDF Upload and Text/Image Extraction
-pdf_agent = Agent(name="PDF_agent", seed="pdf recovery phrase")
-
-
-@pdf_agent.on_message(model=UploadPDF)
+@pdf_to_text_agent.on_message(model=UploadPDF)
 async def handle_upload_pdf(ctx: Context, sender: str, req: UploadPDF):
     # Extract text directly from the PDF data
     pdf_data = base64.b64decode(req.filedata)
-    slides = extract_text_per_slide(pdf_data)[:3]
+    slides = extract_text_per_slide(pdf_data)  # Remove limit if necessary
 
-    # Extract images from the PDF
-    convert_pdf_to_images(req.filename)
-
-    # Prepare the response
-    response = ResponseSlides(slides=slides)
-
-    # Send the response to the lecture agent
-    await ctx.send(lecture_agent.address, response)
-
+    response_tracker['pdf_text'] = slides[:10]
+    # return ResponseSlides(slides=slides)
+    await ctx.send(sender, ResponseSlides(slides=response_tracker['pdf_text']))
 
 def extract_text_per_slide(pdf_data: bytes) -> List[SlideText]:
     slides = []
@@ -66,16 +62,23 @@ def extract_text_per_slide(pdf_data: bytes) -> List[SlideText]:
         print(f"Error occurred: {e}")
         raise
 
+### PDF to Image Agent: Handles PDF Upload and Image Extraction
+pdf_to_image_agent = Agent(name="PDF_to_Image_agent", seed="pdf image recovery phrase")
 
-def convert_pdf_to_images(pdf_path: str) -> None:
-    # Convert PDF pages to images
-    images = convert_from_path(pdf_path)
+@pdf_to_image_agent.on_message(model=UploadPDF)
+async def convert_pdf_to_images(ctx: Context, sender: str, req: UploadPDF):
+    pdf_data = base64.b64decode(req.filedata)
+    images = convert_from_bytes(pdf_data)
+    output = []
 
     # Save each page as an image
     for i, image in enumerate(images):
-        image.save(f'images/page_{i+1}.png', 'PNG')
+        image_path = f'images/page_{i+1}.png'
+        image.save(image_path, 'PNG')
+        output.append(image_path)
 
-
+    response_tracker['pdf_images'] = output
+    return StringArrayModel(messages=output)
 
 ### Lecture Agent: Generates Lecture from Extracted Text and Images
 lecture_agent = Agent(name="Lecture_agent", seed="lecture recovery phrase")
@@ -83,46 +86,28 @@ lecture_agent = Agent(name="Lecture_agent", seed="lecture recovery phrase")
 @lecture_agent.on_message(model=ResponseSlides)
 async def handle_generate_lecture(ctx: Context, sender: str, msg: ResponseSlides):
     lectures = generate_lecture_from_slides(msg.slides)
-    lectures_model = StringArrayModel(messages=lectures)
     
-    # Send the generated lecture to the voice agent
-    await ctx.send(voice_agent.address, lectures_model)
-
+    response_tracker['lecture'] = lectures
+    await ctx.send(voice_agent.address, StringArrayModel(messages=response_tracker['lecture']))
+    return StringArrayModel(messages=lectures)
 
 def generate_lecture_from_slides(slides: List[SlideText], previous_lectures: str = "") -> List[str]:
-    messages = []
     content = []
     lecture_history = previous_lectures  # Start with any existing lecture history
 
     # Loop through each slide to prepare the prompt for each slide
     for slide in slides:
-        image_path = f"images/page_{slide.slide_number}.png"
-        
-        # Encode the image to base64
-        with open(image_path, "rb") as image_file:
-            encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-        
-        # Add each slide's text content and image to the message list
-        messages.append({
-            "role": "user",
-            "content": [
-                {
-                    "type": "text",
-                    "text": f"Here is the lecture so far: {lecture_history}.\n"
-                            f"Now, generate a lecture speech for slide {slide.slide_number}: {slide.text}"
-                },
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": f"data:image/jpeg;base64,{encoded_image}"
-                    }
-                }
-            ]
-        })
+        # Add each slide's text content to the message list
+        messages = [
+            {
+                "role": "user",
+                "content": f"Here is the lecture so far: {lecture_history}.\nNow, generate a lecture speech for slide {slide.slide_number}: {slide.text}"
+            }
+        ]
 
-        # Send request to OpenAI GPT-4 Vision API for the current slide
+        # Send request to OpenAI GPT-4 API for the current slide
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Using the Vision model
+            model="gpt-4o-mini",  # Use the appropriate model
             messages=messages
         )
 
@@ -135,23 +120,25 @@ def generate_lecture_from_slides(slides: List[SlideText], previous_lectures: str
     
     return content
 
-
 ### Voice Agent: Handles Voice Synthesis
 voice_agent = Agent(name="Voice_agent", seed="voice recovery phrase")
 
 @voice_agent.on_message(model=StringArrayModel)
 async def handle_voice_synthesis(ctx: Context, sender: str, msg: StringArrayModel):
+    outputs = []
+
     for index, lecture in enumerate(msg.messages):
         print(f"Synthesizing voice for lecture: {lecture}")
-        text_to_speech(lecture, f"audio/lecture_{index}.mp3")
+        audio_path = text_to_speech(lecture, f"audio/lecture_{index}.mp3")
+        outputs.append(audio_path)
 
-    # Send the synthesized voice to the user agent
-    await ctx.send(user_agent.address, "Voice synthesis completed.")
-
+    response_tracker['voice'] = outputs
+    await ctx.send(transcription_agent.address, StringArrayModel(messages=response_tracker['voice']))
+    # return StringArrayModel(messages=outputs)
 
 def text_to_speech(text: str, output_filename: str):
     response = client.audio.speech.create(
-        model = "tts-1",
+        model="tts-1",
         input=text,
         voice="nova"
     )
@@ -160,9 +147,48 @@ def text_to_speech(text: str, output_filename: str):
     print(f"Audio content written to {output_filename}")
     return output_filename
 
+### Transcription Agent: Handles Audio Transcription
+transcription_agent = Agent(name="Transcription_agent", seed="transcription recovery phrase")
+
+@transcription_agent.on_message(model=StringArrayModel)
+async def handle_audio_transcription(ctx: Context, sender: str, msg: StringArrayModel):
+    outputs = []
+
+    for index, audio_file in enumerate(msg.messages):
+        output_srt_file = f'subtitles/{os.path.basename(audio_file)}.srt'
+        transcription = transcribe_audio(audio_file)
+
+        with open(output_srt_file, 'w') as f:
+            f.write(transcription)
+
+        outputs.append(transcription)
+    
+    response_tracker['transcription'] = outputs
+    print(response_tracker)
+    return StringArrayModel(messages=outputs)
+
+def transcribe_audio(audio_file):
+    with open(audio_file, 'rb') as audio:
+        transcription = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio,
+            language="en",
+            response_format="srt",
+            timestamp_granularities=["segment"]
+        )
+
+    return transcription
 
 ### User Agent: Handles User Interaction
 user_agent = Agent(name="User_agent", seed="user recovery phrase")
+
+response_tracker = {
+    'pdf_text': None,
+    'pdf_images': None,
+    'lecture': None,
+    'voice': None,
+    'transcription': None
+}
 
 @user_agent.on_event("startup")
 async def send_message(ctx: Context):
@@ -183,36 +209,36 @@ async def send_message(ctx: Context):
     # Simulate the request object
     req = UploadPDF(filename=pdf_path, filedata=encoded_pdf)
 
-    print(await ctx.send(pdf_agent.address, req))
+
+    await ctx.send(pdf_to_image_agent.address, req)
+
+    # 1. Extract text from pdf
+    await ctx.send(pdf_to_text_agent.address, req)
+
+    # 2. Extract images from pdf
+    # await ctx.send(pdf_to_image_agent.address, req)
+
+    # 3. Generate lecture speech from text and images of the slides
+    # await ctx.send(lecture_agent.address, ResponseSlides(slides=response_tracker['pdf_text']))
+
+    # 4. Synthesize voice for the lecture
+    # await ctx.send(voice_agent.address, StringArrayModel(messages=response_tracker['lecture']))
+
+    # 5. Transcribe the lecture audio
+    # await ctx.send(
+    #     transcription_agent.address,
+    #     StringArrayModel(messages=response_tracker['voice'])
+    # )
 
 
 ### Bureau to Manage Agents
 bureau = Bureau()
-bureau.add(pdf_agent)
+bureau.add(pdf_to_text_agent)
+bureau.add(pdf_to_image_agent)
 bureau.add(lecture_agent)
-bureau.add(user_agent)
 bureau.add(voice_agent)
+bureau.add(transcription_agent)
+bureau.add(user_agent)
 
 if __name__ == "__main__":
-    # Example usage to simulate sending a PDF
-    pdf_path = "CSS.pdf"  # Path to your PDF file
-
-    # Read the file as bytes
-    with open(pdf_path, "rb") as f:
-        pdf_bytes = f.read()
-
-    if not pdf_bytes:
-        raise FileNotFoundError("Failed to load PDF or file is empty.")
-
-    # Simulate sending the PDF to the PDF agent
-    encoded_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
-    req = UploadPDF(filename=pdf_path, filedata=encoded_pdf)
-    
-    # Start the Bureau (runs all agents)
     bureau.run()
-
-    async def run_agents(ctx: Context):
-        # Send a message from one agent to another
-        await ctx.send(pdf_agent.address, req)
-
-    asyncio.run(run_agents())

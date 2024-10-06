@@ -11,7 +11,7 @@ export const revalidate = 0
 
 async function UploadFlow() {
   const myLectures = await getMyLectures()
-
+  
   return (
     <div className="flex flex-col md:flex-row w-full p-4 gap-4">
         <div className="w-full md:w-1/3">
@@ -25,7 +25,9 @@ async function UploadFlow() {
           {/* <Link href={`/lecture/${pdf.id}`} key={pdf.id}></Link> */}
         <div className="bg-white rounded-lg shadow-md p-4 text-gray-800 flex flex-col ">
           <div className="mb-2">
-            <div className="w-full h-32 bg-gray-200 mb-4 rounded-sm"></div>
+                      <div className="w-full h-32 bg-gray-200 mb-4 rounded-sm">
+                        <img src={`http://localhost:9000/images/${pdf.url}/page_1.png`} alt={`Preview of ${pdf.url}`} className="w-full h-full object-cover" />
+                      </div>
             <h3 className="font-semibold text-lg">{pdf.name}</h3>
             <p className="text-sm text-gray-600">Uploaded on: {pdf.createdAt.toLocaleString()}</p>
           </div>

@@ -13,6 +13,7 @@ export default async function LecturePage({ params }: Props) {
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+      
       <LecturePageWrap docs={docs} />
       
     </div>

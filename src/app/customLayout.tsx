@@ -13,11 +13,11 @@ const CustomLayout: React.FC<CustomLayoutProps> = ({ children }) => {
     <main className="min-w-screen flex min-h-screen flex-col items-center justify-start text-center">
       <GlobalProvider>
         <div style={{ width: "100%" }} className="overflow-y-scroll">
-          {/* <TopNav /> */}
+          <TopNav />
           <div className="flex-grow" style={{ marginTop: "8vh" }}>
             {children}
           </div>
-          {/* <Footer /> */}
+          <Footer />
         </div>
       </GlobalProvider>
     </main>

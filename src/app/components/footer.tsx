@@ -35,125 +35,73 @@ const Footer = () => {
   const pathname = usePathname();
   return (
     <div>
-      {/* Desktop Navigation */}
-      <section className="hidden sm:block">
-        <div className="flex flex-col gap-16">
-          <div className="flex h-[320px] items-center justify-center gap-20">
+      <div className="flex flex-col gap-16">
+        <div className="flex h-[320px] items-center justify-center gap-20">
+          <div className="flex flex-col items-start" style={{ width: "800px" }}>
             <div
-              className="flex flex-col items-start"
-              style={{ width: "800px" }}
+              className="flex flex-col items-start justify-start"
+              style={{ gap: "20px" }}
             >
-              <div
-                className="flex flex-col items-start justify-start"
-                style={{ gap: "20px" }}
-              >
-                <div className="flex flex-col justify-start gap-1">
-                  <div className="flex items-center justify-start gap-2">
-                    <LogoSVG width={40} height={40} fill={Colors.brand500} />
-                    <div
-                      className="font-bold"
-                      style={{
-                        color: Colors.brand500,
-                        fontSize: formats.textXL,
-                      }}
-                    >
-                      Numaira
-                    </div>
-                  </div>
-                  <div
-                    className="text-left"
-                    style={{
-                      color: Colors.neutral700,
-                      fontWeight: 500,
-                      fontSize: formats.textXS,
-                    }}
-                  >
-                    Automating finance one file at a time
-                  </div>
-                </div>
-                <div className="items-start">
-                  <StyledButtonWhite
-                    onClick={() => router.push("/dashboard")}
-                    className={pathname === "/contact" ? "active" : ""}
-                  >
-                    Request A Demo
-                  </StyledButtonWhite>
-                </div>
+              <div className="items-start">
+                <StyledButtonWhite
+                  onClick={() => router.push("/dashboard")}
+                  className={pathname === "/contact" ? "active" : ""}
+                >
+                  Request A Demo
+                </StyledButtonWhite>
               </div>
             </div>
-            <div className="flex justify-start" style={{ gap: "72px" }}>
-              <FooterCoreLayout>
-                <FooterLessBolderFont>
-                  <h5>product</h5>
-                </FooterLessBolderFont>
-                <FooterBoldedFont>Features</FooterBoldedFont>
-                <FooterBoldedFont>Use Cases</FooterBoldedFont>
-                <FooterBoldedFont>Pricing</FooterBoldedFont>
-                <FooterBoldedFont>FAQs</FooterBoldedFont>
-              </FooterCoreLayout>
-              <FooterCoreLayout>
-                <FooterLessBolderFont>
-                  <h5>company</h5>
-                </FooterLessBolderFont>
-                <FooterBoldedFont>About</FooterBoldedFont>
-                <FooterBoldedFont>Contact</FooterBoldedFont>
-                <FooterBoldedFont>Join Us</FooterBoldedFont>
-              </FooterCoreLayout>
-              <FooterCoreLayout>
-                <FooterLessBolderFont>
-                  <h5>Legal</h5>
-                </FooterLessBolderFont>
-                <FooterBoldedFont>Privacy</FooterBoldedFont>
-                <FooterBoldedFont>Cookies</FooterBoldedFont>
-                <FooterBoldedFont>Terms</FooterBoldedFont>
-              </FooterCoreLayout>
-            </div>
           </div>
-          <div
-            className="flex h-[80px] items-center justify-between px-20"
-            style={{
-              width: "100%",
-              color: Colors.neutral700,
-              backgroundColor: Colors.neutral100,
-            }}
-          >
-            <a style={{ fontSize: formats.textLG, fontWeight: 400 }}>
-              © 2024 Numaira. All rights are reserved
-            </a>
-            <div
-              className="flex items-center justify-center"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 20,
-              }}
-            >
-              <a
-                href="https://www.linkedin.com/company/104262671"
-                className="px-1 underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <LinkedInSVG
-                  length={20}
-                  width={20}
-                  alt="linkedin-icon"
-                  fill={Colors.neutral700}
-                />
-              </a>
-              <a href="mailto:numairaai@proton.me" className="px-1 underline">
-                <EmailSVG
-                  length={20}
-                  width={20}
-                  alt="email-icon"
-                  fill={Colors.neutral700}
-                />
-              </a>
-            </div>
+          <div className="flex justify-start" style={{ gap: "72px" }}>
+            <FooterCoreLayout>
+              <FooterLessBolderFont>
+                <h5>product</h5>
+              </FooterLessBolderFont>
+              <FooterBoldedFont>Features</FooterBoldedFont>
+              <FooterBoldedFont>Use Cases</FooterBoldedFont>
+              <FooterBoldedFont>Pricing</FooterBoldedFont>
+              <FooterBoldedFont>FAQs</FooterBoldedFont>
+            </FooterCoreLayout>
+            <FooterCoreLayout>
+              <FooterLessBolderFont>
+                <h5>company</h5>
+              </FooterLessBolderFont>
+              <FooterBoldedFont>About</FooterBoldedFont>
+              <FooterBoldedFont>Contact</FooterBoldedFont>
+              <FooterBoldedFont>Join Us</FooterBoldedFont>
+            </FooterCoreLayout>
+            <FooterCoreLayout>
+              <FooterLessBolderFont>
+                <h5>Legal</h5>
+              </FooterLessBolderFont>
+              <FooterBoldedFont>Privacy</FooterBoldedFont>
+              <FooterBoldedFont>Cookies</FooterBoldedFont>
+              <FooterBoldedFont>Terms</FooterBoldedFont>
+            </FooterCoreLayout>
           </div>
         </div>
-      </section>
+        <div
+          className="flex h-[80px] items-center justify-between px-20"
+          style={{
+            width: "100%",
+            color: Colors.neutral700,
+            backgroundColor: Colors.neutral100,
+          }}
+        >
+          <a style={{ fontSize: formats.textLG, fontWeight: 400 }}>
+            © 2024 Lecture-Agent. All rights are reserved
+          </a>
+          <div
+            className="flex items-center justify-center"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 20,
+            }}
+          ></div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -19,15 +19,15 @@ const TopNav: React.FC = () => {
         className="flex items-center justify-between gap-5 px-10"
         style={{ width: "100%" }}
       >
-        <div className="flex items-center justify-center gap-2">
+        {/* <div className="flex items-center justify-center gap-2">
           <LogoSVG width={40} height={40} fill={Colors.brand500} />
           <div
             className="font-bold"
             style={{ color: Colors.brand500, fontSize: formats.textXL }}
           >
-            Numaira
+            Leture-Agent
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center gap-5">
           <div>
             <div
@@ -37,7 +37,7 @@ const TopNav: React.FC = () => {
                 cursor: "pointer",
               }}
             >
-              Product
+              Home
             </div>
           </div>
           <div>
@@ -53,13 +53,12 @@ const TopNav: React.FC = () => {
           </div>
           <div>
             <div
-              onClick={() => router.push("/pricing")}
-              className={pathname === "/pricing" ? "font-bold" : ""}
+              onClick={() => router.push("/lecture")}
               style={{
                 cursor: "pointer",
               }}
             >
-              Pricing
+              Your Lecture
             </div>
           </div>
         </div>

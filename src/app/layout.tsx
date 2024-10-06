@@ -21,16 +21,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
+    
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
-      <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>{children}</body>
+      {children}</body>
     </html>
-    </ClerkProvider>
+    
   );
 }

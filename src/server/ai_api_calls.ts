@@ -1,7 +1,8 @@
+"server-only"
 
+const apiUrl = `https://yhack2024-ai-production.up.railway.app/`;
 
 export async function getMyAIResponce() {
-  const apiUrl = `https://dog.ceo/api/breeds/image/random`;
 
   try {
     const response = await fetch(apiUrl, {
@@ -10,16 +11,6 @@ export async function getMyAIResponce() {
         "Accept": "application/json",
       },
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new TypeError("Oops, we haven't got JSON!");
-    }
 
     const data = await response.json();
     return data;

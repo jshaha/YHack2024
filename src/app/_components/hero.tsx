@@ -11,10 +11,7 @@ export default function Hero() {
             The Efficient, Adaptive, and Interactive Lecture Platform
           </h1>
           <p className="mb-6 text-sm text-gray-500 sm:text-xl lg:mb-8">
-            Say goodbye to payment headaches with SecurePay! Our easy-to-use
-            payment platform makes it simple for businesses and individuals to
-            send and receive payments quickly and securely.
-          </p>
+            Transform your class slides into engaging, professor-like lectures accessible from anywhere, anytime. Whether you're a student, professional, or lifelong learner, our AI-driven platform brings your learning materials to life. Experience personalized, interactive lessons tailored to you.
           {/* Button */}
           <SignInButton>
                 <button className="mr-6 inline-block items-center rounded-md bg-black px-8 py-4 text-center font-semibold text-white lg:mr-8">Sign In</button>

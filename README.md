@@ -1,6 +1,12 @@
-# YHack 2024
+# YHack 2024 - Lecture-Agent
 
-## Agents Launch instructions
+## What we do
+
+## How we come up with this idea
+
+/// image
+![Draft on blackboard](boardDraft.jpg)
+
 
 Follow these steps to set up and run the project:
 ## Move to the backend
